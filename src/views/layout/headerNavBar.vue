@@ -6,6 +6,7 @@
       <div class="btn-fullscreen" @click="handleFullScreen">
   <el-tooltip  effect="dark" :content="fullscreen ? `取消全屏`:`全屏`" placement="bottom">
     <i class="el-icon-full-screen"></i>
+      <!-- <div class="msi">msi</div> -->
   </el-tooltip>
 </div>
 </div>

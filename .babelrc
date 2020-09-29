@@ -2,6 +2,7 @@
   "presets": [
     ["env", {
       "modules": false,
+      "useBuiltIns": "entry",  //添加此属性
       "targets": {
         "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
       }

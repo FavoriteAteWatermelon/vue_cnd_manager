@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <svg height="50" xmlns="http://www.w3.org/2000/svg" id="svg">
+        <defs>
+          <style>
+            .text{font:bolder 26px Impact;}   
+            @keyframes stroke {
+              50% {
+                stroke-width:30;
+                stroke-opacity: .5;
+              }
+            } 
+            .g-spots circle{stroke-width: 0;animation: stroke 2s infinite;}
+            .g-spots circle:nth-child(1) {animation-delay: -0.4s;}
+            .g-spots circle:nth-child(2) {animation-delay: -1.2s;}
+          </style>  
+        <pattern id="p-spots" width="0.12" height="0.2">
+          <g class="g-spots">
+            <circle r="10" cx="10" cy="5" fill="red" stroke="#ea384d" />
+            <circle r="10" cx="25" cy="20" fill="#bfe9ff" stroke="#ff6e7f"/> 
+          </g>
+        </pattern>
+        </defs>  
+        <text class="text" dominant-baseline="hanging" y="10" x="0" stroke="url(#p-spots)" fill="none" stroke-width="2" stroke-opacity="0.5">msi</text>
+      </svg>
+</body>
+</html>

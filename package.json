@@ -4,11 +4,6 @@
   "description": "A Vue.js project",
   "author": "maoshiba18 <1039849632@qq.com>",
   "private": true,
-  "fileheader.tpl": {
-    "type": "string",
-    "default": "/*\r\n * @Author: {author} \r\n * @Date: {createTime} \r\n * @Last Modified by:  {lastModifiedBy} \r\n * @Last Modified time: {updateTime} \r\n */\r\n",
-    "description": "By default, common template. Do not modify it!!!!!"
-  },
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
@@ -17,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
+    "babel-polyfill": "^6.26.0",
     "echarts": "^4.5.0",
     "element-ui": "^2.12.0",
     "file-saver": "^2.0.2",
@@ -26,8 +22,10 @@
     "nprogress": "^0.2.0",
     "vue": "^2.5.2",
     "vue-axios": "^2.1.5",
+    "vue-cropper": "^0.5.5",
+    "vue-img-cutter": "^2.1.7",
     "vue-router": "^3.0.1",
-    "vue-socket.io": "^3.0.7",
+    "vue-socket.io": "3.0.7",
     "vuex": "^3.1.2",
     "xlsx": "^0.15.3"
   },

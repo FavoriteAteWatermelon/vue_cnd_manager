@@ -3,22 +3,25 @@
 
 import Vue from 'vue'
 import App from './App'
+import 'babel-polyfill'
 import router from './router'
 import ElementUI from 'element-ui'
+import VueCropper from 'vue-cropper'
 import 'element-ui/lib/theme-chalk/index.css'
-import 'normalize.css'
 import '@/assets/scss/index.scss'
 import store from '@/store'
 import './routerStyle'
-import VueSocketIO from 'vue-socket.io'
-Vue.use(new VueSocketIO({
+// import VueSocketIO from 'vue-socket.io'
+// Vue.use(new VueSocketIO({
 
-  debug: true,
+//   debug: true,
 
-  connection: 'http://localhost:3000/'
+//   connection: 'http://192.17.1.80:3000/'
+//   // connection: 'localhost:3000'
 
-}))
+// }))
 Vue.config.productionTip = false
+Vue.use(VueCropper)
 Vue.use(ElementUI)
 /* eslint-disable no-new */
 new Vue({

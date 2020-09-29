@@ -1,7 +1,7 @@
 <template>
   <div class="breadcrumb">
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :key="router" v-for="router in breadcrumbList" :to="{ path: '/'+router }">{{router}}</el-breadcrumb-item>
+      <el-breadcrumb-item :key="router" v-for="router in breadcrumbList" >{{router}}</el-breadcrumb-item>
     </el-breadcrumb>
   </div>
 </template>
@@ -15,12 +15,21 @@ export default {
   },
   // 将路由循环
   mounted () {
-    this.breadcrumbList = [this.$router.currentRoute.fullPath.slice(1)]
+    this.breadcrumbList = this.$router.currentRoute.matched.map((item) => { return item.name })
+    // 监控页面刷新事件
+    window.onload = () => {
+      // if ()
+      this.breadcrumbList = this.$router.currentRoute.matched.map((item) => { return item.name })
+      // console.log(this.breadcrumbList)
+    }
   },
   // 观测路由的变化
   watch: {
     $route (now) {
-      this.breadcrumbList = now.fullPath.split('/').slice(1)
+      // console.log(now)
+      // console.log(now.matched)
+      this.breadcrumbList = now.matched.map((item) => { return item.name })
+      console.log(this.breadcrumbList)
     }
   }
 
@@ -31,4 +40,5 @@ export default {
   display: inline-block;
   margin-left: 20px;
 }
+
 </style>

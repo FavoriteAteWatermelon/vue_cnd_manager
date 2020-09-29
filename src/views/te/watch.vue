@@ -1,43 +1,148 @@
 <template>
   <div class="watch">
-    <div class="con"  v-for="(item, index ) in AOIList" :key="item">
-      <div class="box">
-        <el-popover
-        class="list"
-        placement="top-start"
-        title="标题"
-        width="200"
-        trigger="hover"
-        content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">
-        <el-button slot="reference">{{item}}</el-button>
-      </el-popover>
-        <div class="content" :style="{'animation-delay': index + 's'}">
+    <el-dialog
+  title="请输入机台名字"
+  :visible.sync="dialogVisible"
+  :before-close="closeWindow"
+  width="30%">
+  <el-input v-model="itemName"></el-input>
+  <el-button @click="confirmItem" style="margin-top:20px">确定</el-button>
 
-        </div>
-      </div>
+</el-dialog>
+    <div class="select-board">
+      <span @click="filterBoard(item, index)"  :class="[item.show ? 'board-item': 'hidden-item']" v-for="(item, index) in originList" :key="index" >{{item.name}}</span>
     </div>
-
+    <listview @deleItem="deleItem" @addItem="addItem" v-show = "item.show" v-for="(item, index) in originList" :name="item.name" :children="item.children" :color="item.color" :key="index"></listview>
   </div>
 </template>
 
 <script>
+import listview from '@/components/listview'
 export default {
+  /* eslint-disable */ 
   data () {
     return {
-      AOIList: ['a3faoi-d', 'a3faoi-e', 'a3faoi-d', 'a3faoi-e', 'a3faoi-d', 'a3faoi-e', 'a3faoi-d', 'a3faoi-e']
+      checkedCities: [],
+      dialogVisible: false,
+      itemName: '',
+      // 哪一个站别
+      station: '',
+      originList: localStorage.getItem('classification') ? JSON.parse(localStorage.getItem('classification'))  : [
+        {
+          name: 'SPI',
+          color: '#E55D87',
+          children: [ ],
+          show: true
+        },
+        {
+          name: 'SMT',
+          color: '#F09819',
+          children: [],
+           show: true
+        },
+        {
+          name: 'TM',
+          color: '#fbc7d4',
+          children: [],
+           show: true
+        },
+        {
+          name: 'TIN',
+          color: '#7AA1D2',
+          children: [],
+           show: true
+        },
+        {
+          name: 'PACK',
+          color:  '#3CA55C',
+          children: [],
+           show: true
+        },
+        {
+          name: 'CPU',
+          color: '#56B4D3',
+          children: [],
+           show: true
+        },
+        {
+          name: 'DIP',
+          color: '#9733EE',
+          children: [],
+           show: true
+        }
+      ]
     }
   },
   methods: {
-    test () {
-      this.$socket.emit('err', '测试完')
+    saveInfo () {
+      setInterval(() => {
+         localStorage.setItem('classification',JSON.stringify(this.originList)) 
+      },120000)
+    },
+    closeWindow () {
+      this.itemName = ''
+      this.dialogVisible = false
+      this.station = ''
+      
+    },
+    addItem (name) {
+      this.dialogVisible = true
+      this.station = name
+      // console.log(name)
+    }, 
+    deleItem (name, i) {
+      
+      this.originList.forEach((item, index) => {
+        if (item.name === name) {
+          item.children.splice(i, 1)
+        }
+      })
+    },
+    confirmItem () {
+      this.originList.forEach((item, index) => {
+        if (item.name === this.station) {
+          item.children.push({name:this.itemName,value:this.station,status: true})
+        }
+      })
+       this.closeWindow()
+    },
+    // 对显示的list做filter
+    filterBoard (item, index) {
+       this.originList[index]['show'] = !this.originList[index]['show']
+       localStorage.setItem('classification',JSON.stringify(this.originList)) 
+    },
+    subscribeInfo (name,status) {
+      this.sockets.subscribe(name, (data) => {
+      // originList
+        this.originList.forEach((item, index) => {
+          if (item.name === data.value) {
+            let hasItem = false
+            // console.log(item)
+            item.children.forEach((child, i) => {
+              if (child.name === data.name) {
+                hasItem = true
+                child['status'] = status
+              }
+            })
+            // if (!hasItem) {
+            //   this.originList[index].children.push(data)
+            // }
+          } else {
+            return
+          }
+        })
+      })
     }
   },
   mounted () {
-    this.sockets.subscribe('aoiError', (data) => {
-      if (this.AOIList.indexOf(data) === -1) {
-        this.AOIList.push(data)
-      }
-    })
+    // console.log(this.sockets)
+    this.subscribeInfo('addName', true)
+    this.subscribeInfo('aoiError', false)
+    this.saveInfo()
+
+  },
+  components: {
+    listview
   }
 }
 </script>
@@ -52,6 +157,15 @@ export default {
     display: flex;
     flex-wrap: wrap;
   }
+  .select-board{
+    width: 100%;
+    text-align: center;
+    .board-item{
+      margin: 0 10px;
+      cursor: pointer;
+    }
+  }
+
   .con {
     display: flex;
     margin: 20px;
@@ -62,51 +176,28 @@ export default {
     border: 5px solid  #34a4d5;
     border-radius: 50%;
   }
-  .box{
-    width: 160px;
-    height: 160px;
-    // border: 1px solid #34a4d5;
-    box-sizing: border-box;
-    padding: 5px;
-
-    // box-shadow: 1px 1px 1px #55bfda;
-    border-radius: 50%;
-    overflow: hidden;
-    position: relative;
-  }
-  .content{
-    position: absolute;
-    top: 40px;
-    left: -30px;
-    height: 200px;
-    width: 200px;
-    background: #34a4d5;
-    border-radius: 40%;
-    // box-shadow: 20px 20px #55bfda;
-    /* transform-origin: 0 -250px; */
-    animation: rotateCube 5s linear infinite;
-    /* transition: all 3s ;
-    transform: rotate(360deg)  */
-  }
-  .list{
-    position: absolute;
-    left: 50%;
-    margin-left: -47.5px;
-    top: 50%;
-    z-index: 2;
-  }
   >>> .el-button{
     background: #34a4d5;
     color: #fff;
     font-weight: bold;
   }
-
-   @keyframes rotateCube {
-    from{
-      transform: rotate(0deg)
-    }
-    to {
-      transform: rotate(360deg)
-    }
+  .board-item {
+    display: inline-block;
+    background: #409eff;
+    color: #fff;
+    padding: 7px;
+    border-radius: 5px;
   }
+  .hidden-item {
+    margin: 0 10px;
+    display: inline-block;
+    // background: #409eff;
+    border: 1px solid #409eff;
+    // color: #fff;
+    padding: 7px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+
 </style>

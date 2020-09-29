@@ -2,8 +2,10 @@
   <div >
     <div class="header-container"  :class="isExtend" >
        <headerNavBar @showUserBox="showUser" />
+        <div class="logo">
+          CND後台管理系統
+        </div>
     </div>
-
     <!-- eslint-disable vue/require-component-is -->
     <!-- <sidebar class="sidebar-container" /> -->
     <div class="scroll-container">
@@ -162,6 +164,26 @@ export default {
   transition: left 0.3s ease;
   border-bottom: 1px solid #e6e6e6;
 }
+.logo {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  text-align: center;
+  line-height: 50px;
+  margin-left: -200px;
+  font-weight: bold;
+  width: 400px;
+  font-size: 24px;
+  font-style: italic;
+  letter-spacing: 1px;
+  height: 50px;
+  z-index: 201;
+  animation: stripes 2s linear infinite;
+  background-color:#fff;
+  background:linear-gradient(crimson 50%, #aaa 50%) 0 0/ 100% 50px ;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+}
 .demo{
   border:none!important;
 }
@@ -195,4 +217,5 @@ export default {
 
 }
 }
+@keyframes stripes {100% {background-position: 0 -50px;}}
 </style>
